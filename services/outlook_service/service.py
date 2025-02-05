@@ -87,6 +87,17 @@ class OutlookService:
         
         return self.get_calendar_events(start_date, end_date)
 
+    def get_current_week_events(self) -> List[CalendarEvent]:
+        """Get all calendar events for the current week, including future meetings."""
+        today = datetime.now()
+        start_of_week = today - timedelta(days=today.weekday())
+        start_date = datetime(start_of_week.year, 
+                            start_of_week.month,
+                            start_of_week.day)
+        end_date = start_date + timedelta(days=7)
+        
+        return self.get_calendar_events(start_date, end_date)
+
     def calculate_total_meeting_hours(self, events: List[CalendarEvent]) -> float:
         """
         Calculate total hours spent in meetings.
