@@ -1,6 +1,6 @@
 # Outlook Calendar Automation
 
-A Python application for automating Outlook calendar tasks, specifically focused on tracking meeting hours and categorizing time spent.
+A Python application for analyzing Outlook calendar data, calculating meeting hours, and categorizing meetings by type. The application provides daily and weekly summaries of time spent in different types of meetings.
 
 ## Requirements
 
@@ -39,41 +39,56 @@ poetry shell
 
 1. Ensure Outlook (Classic/Desktop version) is running and you're logged in.
 
-2. Run the calendar check script:
+2. Run the application:
 ```bash
-python test_outlook_connection.py
+python cli.py
 ```
 
-This will:
-- Connect to your Outlook calendar
-- Display meetings for the current week
-- Calculate total meeting hours
-- Show detailed meeting information including duration and organizer
+The application provides an interactive menu with the following options:
+1. Check this week's meetings
+2. Check next week's meetings
+3. Check last week's meetings
+4. Generate detailed report
 
-If you encounter any issues, the application will provide guidance about:
-- Outlook version compatibility
-- Connection requirements
-- Necessary permissions
+For each time period, the application will show:
+- Daily breakdown of meetings by category
+- Total time spent in each category per day
+- Weekly summary of time across all categories
+
+### Meeting Categories
+
+Meetings are automatically categorized into:
+- Team/Staff: Small group meetings, standups, 1:1s
+- Department: Larger organizational meetings, planning sessions
+- Company-Wide: All-hands meetings, town halls
+- Onboarding: New hire and training related meetings
+
+### Time Calculations
+
+- Meeting durations are rounded up to the nearest 30-minute interval
+- Daily totals show time spent by category
+- Weekly summaries provide an overview of total time in each category
 
 ## Project Structure
 
-Services and files which exist out of this structure are relics of a template, or planned future functionality.
-
 ```
 +-- services/
-│   +-- outlook_service/    # Core Outlook interaction service
-│       +-- service.py      # Main service implementation
-│       +-- tests/          # Service tests
+│   +-- outlook_service/          # Core Outlook interaction service
+│   │   +-- service.py           # Main Outlook service
+│   │   +-- models.py            # Meeting data models
+│   │   +-- tests/               # Service tests
+│   +-- categorization_service/   # Meeting categorization
+│   │   +-- service.py           # Categorization logic
 +-- shared/
-│   +-- logger.py          # Logging utility
-+-- test_outlook_connection.py  # Main test script
+│   +-- logger.py                # Logging utility
++-- cli.py                       # Main application entry point
 ```
 
 ## Development
 
 - Run tests: `python -m pytest`
-- Main service file: `services/outlook_service/service.py`
-- Logger utility: `shared/logger.py`
+- Add new categories: Update `categorization_service/service.py`
+- Modify time calculations: Update `outlook_service/models.py`
 
 ## Troubleshooting
 
@@ -87,12 +102,17 @@ Services and files which exist out of this structure are relics of a template, o
    - Check Outlook security settings
    - Verify you have necessary permissions
 
+3. Incorrect categorization:
+   - Check category keywords in `categorization_service/service.py`
+   - Meeting titles and organizers are used for categorization
+
 ## Future Enhancements
 
 Planned features:
-- Time categorization for meetings
-- Reporting capabilities
-- Export to timecard systems
+- Export capabilities for timecard systems
+- Custom category definitions
+- Historical reporting and trends
+- Meeting pattern analysis
 
 ## Contributing
 
