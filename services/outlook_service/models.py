@@ -1,6 +1,6 @@
 # services/outlook_service/models.py
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 @dataclass
@@ -21,9 +21,19 @@ class Meeting:
         """Returns a dictionary of properties to display in the UI."""
         return {
             "time": self.start_time.strftime("%H:%M"),
-            "duration": f"{self.duration} min",
+            "duration": f"{self.rounded_duration} min",
             "organizer": self.organizer.split(',')[0]  # Just last name
         }
+
+    @property
+    def rounded_duration(self) -> int:
+        """Returns duration rounded up to nearest 30m interval."""
+        return ((self.duration + 29) // 30) * 30  # Round up to nearest 30m
+
+    @property
+    def weekday(self) -> str:
+        """Returns the weekday name of the meeting."""
+        return self.start_time.strftime("%A")
 
     @classmethod
     def from_outlook_item(cls, item) -> 'Meeting':
